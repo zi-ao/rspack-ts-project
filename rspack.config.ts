@@ -1,10 +1,10 @@
 import { resolve } from 'node:path';
 import { defineConfig } from '@rspack/cli';
 import { type RspackPluginFunction, rspack } from '@rspack/core';
-import { VueLoaderPlugin } from 'vue-loader';
 import UnoCSS from '@unocss/postcss';
 import AutoImport from 'unplugin-auto-import/rspack';
 import Components from 'unplugin-vue-components/rspack';
+import { VueLoaderPlugin } from 'vue-loader';
 
 // Target browsers, see: https://github.com/browserslist/browserslist
 const targets = ['chrome >= 87', 'edge >= 88', 'firefox >= 78', 'safari >= 14'];
@@ -75,26 +75,35 @@ export default defineConfig({
     new rspack.DefinePlugin({
       __VUE_OPTIONS_API__: true,
       __VUE_PROD_DEVTOOLS__: false,
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
     }),
     new VueLoaderPlugin() as RspackPluginFunction,
     AutoImport({
       dts: './.temp/auto-imports.d.ts',
-      imports: ['vue'],
+      imports: ['vue', 'vue-router'],
     }),
     Components({
       dts: './.temp/components.d.ts',
       resolvers: [
         {
           type: 'component',
-          name: (name: string) => {
+          resolve: (name: string) => {
             if (name.match(/^(C[A-Z]|c-[a-z])/)) {
-              return { from: `@/components/${name.replace(/([A-Za-z])([A-Z])/g, '$1-$2').toLowerCase()}` };
+              return {
+                from: `@/components/${name.replace(/([A-Za-z])([A-Z])/g, '$1-$2').toLowerCase()}`,
+              };
             }
           },
         },
       ],
     }),
   ],
+  devServer: {
+    historyApiFallback: true,
+  },
+  watchOptions: {
+    poll: true,
+  },
   optimization: {
     minimizer: [
       new rspack.SwcJsMinimizerRspackPlugin(),

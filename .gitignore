@@ -7,6 +7,9 @@
 node_modules
 dist/
 
+# Temp
+.temp/
+
 # IDE
 .vscode/*
 !.vscode/extensions.json

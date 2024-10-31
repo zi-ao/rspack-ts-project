@@ -7,12 +7,12 @@
     "build": "cross-env NODE_ENV=production rspack build",
     "check": "biome check --write",
     "dev": "cross-env NODE_ENV=development rspack serve",
-    "format": "prettier --write .",
-    "lint": "eslint ."
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@unocss/reset": "^0.63.6",
-    "vue": "^3.4.21"
+    "vue": "^3.4.21",
+    "vue-router": "^4.4.5"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.3",
@@ -35,7 +35,7 @@
   },
   "lint-staged": {
     "*.{ts,ts,vue,js,jsx,css}": [
-      "npx @biomejs/biome lint --write"
+      "biome check --write"
     ]
   },
   "simple-git-hooks": {
